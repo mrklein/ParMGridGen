@@ -10,6 +10,16 @@
 
 #include "parmgridgen.h"
 
+void MGridGen(int, idxtype *, realtype *, realtype *, idxtype *, realtype *,
+              int, int, int *, int *, int *, idxtype *);
+
+void ParMETIS_FusedElementGraph(idxtype *, idxtype *, realtype *, realtype *, idxtype *, idxtype *,
+                       realtype *, int *, int *, int *, int*,  idxtype *, MPI_Comm *);
+
+void MGridGenRefine(int, idxtype *, realtype *, realtype *, idxtype *,
+                    idxtype *, realtype *, int , int , int *, int *, int *,
+                    idxtype *);
+
 /***********************************************************************************
 * This function is the entry point of the parallel coarse grid construction.
 * This function assumes nothing about the graph distribution.
@@ -114,7 +124,7 @@ void ParMGridGen(idxtype *vtxdist, idxtype *xadj, realtype *vvol, realtype *vsur
   printf("MGridGen Time: %lf\n", gettimer(tmr1));
 */
 
-  IMfree(&orxadj, &oradjncy, &oradjwgt, &orvsurf, LTERM);
+  IMfree((void**)&orxadj, &oradjncy, &oradjwgt, &orvsurf, LTERM);
 
   IFSET(options[OPTION_DBGLVL], DBG_STEPS, printf("%d END OF CYCLE 0 : MGridGen nparts=%d\n",mype, *nparts));
   /* Move graph around and refine for #nsteps steps */
@@ -140,7 +150,7 @@ void ParMGridGen(idxtype *vtxdist, idxtype *xadj, realtype *vvol, realtype *vsur
 
   MAKECSR(i, npes, fvtxdist);
   firstfvtx = fvtxdist[mype];
-  IMfree(&fvtxdist, LTERM);
+  IMfree((void**)&fvtxdist, LTERM);
 
   /* Convert the part array into global numbering */
   for (i=0; i<nvtxs; i++)
@@ -177,7 +187,7 @@ void ParMGridGen(idxtype *vtxdist, idxtype *xadj, realtype *vvol, realtype *vsur
 
   nvtxs = mgraph->nvtxs;
 
-  IMfree(&graph->lperm, &graph->peind, &graph->recvptr, &graph->recvind, &graph->sendptr,
+  IMfree((void**)&graph->lperm, &graph->peind, &graph->recvptr, &graph->recvind, &graph->sendptr,
          &graph->sendind, &graph->pexadj, &graph->peadjncy, &graph->peadjloc, &graph->imap,
          &graph->vwgt, &graph->adjwgtsum, &graph->where, &graph, LTERM);
   FreeMGridWSpace(&wspace);
@@ -192,7 +202,7 @@ void ParMGridGen(idxtype *vtxdist, idxtype *xadj, realtype *vvol, realtype *vsur
   for (i=0; i<nvtxs; i++)
      part[i] = mgraph->fusedinfo[perm[i]];
   
-  IMfree(&mgraph->vtxdist, &mgraph->xadj, &mgraph->vwgt, &mgraph->vvol, &mgraph->vsurf,
+  IMfree((void**)&mgraph->vtxdist, &mgraph->xadj, &mgraph->vwgt, &mgraph->vvol, &mgraph->vsurf,
          &mgraph->adjwgtsum, &mgraph->adjncy, &mgraph->adjwgt, &mgraph->fusedinfo,
          &mgraph->glblvtxid, &mgraph,
          p_xadj, p_vvol, p_vsurf, p_adjncy, p_adjwgt, p_part, p_glblvtxid,
@@ -299,7 +309,7 @@ void MoveRefine(idxtype *vtxdist, idxtype **p_xadj, realtype **p_vvol,
 */    
      ctrl.nparts=npes;
    
-     IMfree(&graph, &mgraph, LTERM);
+     IMfree((void**)&graph, &mgraph, LTERM);
 /*
      cleartimer(tmr1);
      starttimer(tmr1);
@@ -327,7 +337,7 @@ void MoveRefine(idxtype *vtxdist, idxtype **p_xadj, realtype **p_vvol,
      printf("MoveMGridGraph Time = %lf\n",gettimer(tmr1)/nsteps);
 */
 
-     IMfree(&xadj, &vvol, &vsurf, &adjwgt, &adjncy, &oradjncy2, &part, &vwgt, 
+     IMfree((void**)&xadj, &vvol, &vsurf, &adjwgt, &adjncy, &oradjncy2, &part, &vwgt, 
             &fvtxdist, &fusedinfo, &glblvtxid, &graph->vwgt, &graph->adjwgtsum,
             &graph->lperm, &graph->peind, &graph->recvptr, &graph->recvind,
             &graph->sendind, &graph->sendptr, &graph->pexadj, &graph->peadjncy,
@@ -402,7 +412,7 @@ void MoveRefine(idxtype *vtxdist, idxtype **p_xadj, realtype **p_vvol,
      printf("count measure1=%f measure2=%f\n",gmeasure1, gmeasure2);
 */
 
-     IMfree(&mgraph->vtxdist, &mgraph->xadj, &mgraph->adjncy, &mgraph->vsurf,
+     IMfree((void**)&mgraph->vtxdist, &mgraph->xadj, &mgraph->adjncy, &mgraph->vsurf,
                  &mgraph->adjwgt, &mgraph->adjwgtsum, &mgraph->fusedinfo, LTERM); 
      FreeMGridWSpace(&wspace);
      FreeMGridCtrl(&ctrl);
@@ -420,7 +430,7 @@ void MoveRefine(idxtype *vtxdist, idxtype **p_xadj, realtype **p_vvol,
   *p_part = part;
   *p_glblvtxid = glblvtxid;
 
-  IMfree(&vwgt, &oradjncy2, &graph, &mgraph, LTERM); 
+  IMfree((void**)&vwgt, &oradjncy2, &graph, &mgraph, LTERM); 
 }
 
 
@@ -611,7 +621,7 @@ void PrintAspectRatioStats(idxtype *vtxdist, idxtype *xadj, realtype *vvol, real
   printf("\n------------------------------ END ------------------------------\n");
 
   FreeMGridWSpace(&wspace);
-  IMfree(&graph->vtxdist, &graph->xadj, &graph->adjncy, &graph->adjwgt, &graph->vvol,
+  IMfree((void**)&graph->vtxdist, &graph->xadj, &graph->adjncy, &graph->adjwgt, &graph->vvol,
          &graph->vsurf, &graph->vwgt, &graph->adjwgtsum, &graph->lpvol, &graph->gpvol,
          &graph->lpsurf, &graph->gpsurf, &graph->lperm, &graph->where, &graph->rinfo,
          &graph->lpwgts, &graph->gpwgts, &graph->peind, &graph->sendptr,

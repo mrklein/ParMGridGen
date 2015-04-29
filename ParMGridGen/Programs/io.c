@@ -18,7 +18,7 @@ void MGridReadTestGraph(MGridGraphType *graph, char *filename, MPI_Comm comm)
 {
   int i, k, l, npes, mype;
   int nvtxs, penum, snvtxs;
-  idxtype *gxadj, *gadjncy;  
+  idxtype *gxadj, *gadjncy;
   idxtype *vtxdist, *sxadj, *ssize;
   realtype *gadjwgt, *gvsurf, *gvvol;
   MPI_Status status;
@@ -62,15 +62,15 @@ void MGridReadTestGraph(MGridGraphType *graph, char *filename, MPI_Comm comm)
 
       ssize[penum] = gxadj[vtxdist[penum+1]] - gxadj[vtxdist[penum]];
 
-      if (penum == mype) 
+      if (penum == mype)
         idxcopy(snvtxs+1, sxadj, graph->xadj);
       else
-        MPI_Send((void *)sxadj, snvtxs+1, IDX_DATATYPE, penum, 1, comm); 
+        MPI_Send((void *)sxadj, snvtxs+1, IDX_DATATYPE, penum, 1, comm);
 
       free(sxadj);
     }
   }
-  else 
+  else
     MPI_Recv((void *)graph->xadj, graph->nvtxs+1, IDX_DATATYPE, 0, 1, comm, &status);
 
   graph->vvol = realmalloc(graph->nvtxs, "MGridReadTestGraph: vvol");
@@ -82,10 +82,10 @@ void MGridReadTestGraph(MGridGraphType *graph, char *filename, MPI_Comm comm)
        if (penum == mype)
          realcopy(snvtxs, gvvol+vtxdist[penum], graph->vvol);
        else
-         MPI_Send((void *)(gvvol+vtxdist[penum]), snvtxs, REAL_DATATYPE, penum, 1, comm); 
+         MPI_Send((void *)(gvvol+vtxdist[penum]), snvtxs, REAL_DATATYPE, penum, 1, comm);
     }
   }
-  else 
+  else
     MPI_Recv((void *)graph->vvol, graph->nvtxs, REAL_DATATYPE, 0, 1, comm, &status);
 
   graph->vsurf = realmalloc(graph->nvtxs, "MGridReadTestGraph: vsurf");
@@ -97,10 +97,10 @@ void MGridReadTestGraph(MGridGraphType *graph, char *filename, MPI_Comm comm)
        if (penum == mype)
          realcopy(snvtxs, gvsurf+vtxdist[penum], graph->vsurf);
        else
-         MPI_Send((void *)(gvsurf+vtxdist[penum]), snvtxs, REAL_DATATYPE, penum, 1, comm); 
+         MPI_Send((void *)(gvsurf+vtxdist[penum]), snvtxs, REAL_DATATYPE, penum, 1, comm);
     }
   }
-  else 
+  else
     MPI_Recv((void *)graph->vsurf, graph->nvtxs, REAL_DATATYPE, 0, 1, comm, &status);
 
   graph->nedges = graph->xadj[graph->nvtxs];
@@ -109,13 +109,13 @@ void MGridReadTestGraph(MGridGraphType *graph, char *filename, MPI_Comm comm)
   if (mype == 0) {
     for (penum=0; penum<npes; penum++) {
 
-      if (penum == mype) 
+      if (penum == mype)
         idxcopy(ssize[penum], gadjncy+gxadj[vtxdist[penum]], graph->adjncy);
       else
-        MPI_Send((void *)(gadjncy+gxadj[vtxdist[penum]]), ssize[penum], IDX_DATATYPE, penum, 1, comm); 
+        MPI_Send((void *)(gadjncy+gxadj[vtxdist[penum]]), ssize[penum], IDX_DATATYPE, penum, 1, comm);
     }
   }
-  else 
+  else
     MPI_Recv((void *)graph->adjncy, graph->nedges, IDX_DATATYPE, 0, 1, comm, &status);
 
   graph->vwgt = NULL;
@@ -132,11 +132,11 @@ void MGridReadTestGraph(MGridGraphType *graph, char *filename, MPI_Comm comm)
 
     free(ssize);
   }
-  else 
+  else
     MPI_Recv((void *)graph->adjwgt, graph->nedges, REAL_DATATYPE, 0, 1, comm, &status);
 
-  if (mype == 0) 
-    IMfree(&gxadj, &gvvol, &gvsurf, &gadjncy, &gadjwgt, LTERM);
+  if (mype == 0)
+    IMfree((void**)&gxadj, &gvvol, &gvsurf, &gadjncy, &gadjwgt, LTERM);
 }
 
 
@@ -162,7 +162,7 @@ double *ReadTestCoordinates(MGridGraphType *graph, char *filename, int ndims, MP
 
   if (mype == 0) {
     sprintf(xyzfile, "%s.xyz", filename);
-    if ((fpin = fopen(xyzfile, "r")) == NULL) 
+    if ((fpin = fopen(xyzfile, "r")) == NULL)
       errexit("Failed to open file %s\n", xyzfile);
   }
 
@@ -172,19 +172,19 @@ double *ReadTestCoordinates(MGridGraphType *graph, char *filename, int ndims, MP
     for (penum=0; penum<npes; penum++) {
       for (k=0, i=vtxdist[penum]; i<vtxdist[penum+1]; i++, k++) {
         for (j=0; j<ndims; j++)
-          fscanf(fpin, "%e ", txyz+k*ndims+j);
+          fscanf(fpin, "%le ", txyz+k*ndims+j);
       }
 
-      if (penum == mype) 
+      if (penum == mype)
         memcpy((void *)xyz, (void *)txyz, sizeof(float)*ndims*k);
       else {
-        MPI_Send((void *)txyz, ndims*k, MPI_FLOAT, penum, 1, comm); 
+        MPI_Send((void *)txyz, ndims*k, MPI_FLOAT, penum, 1, comm);
       }
     }
     free(txyz);
     fclose(fpin);
   }
-  else 
+  else
     MPI_Recv((void *)xyz, ndims*graph->nvtxs, MPI_FLOAT, 0, 1, comm, &status);
 
   return xyz;
@@ -233,7 +233,7 @@ void ReadMGridGraph(char *filename, int *r_nvtxs, idxtype **r_xadj, idxtype **r_
     do {
       fgets(line, MAXLINE, fpin);
     } while (line[0] == '%' && !feof(fpin));
-    if (strlen(line) == MAXLINE) 
+    if (strlen(line) == MAXLINE)
       errexit("\nBuffer for fgets not big enough!\n");
 
 

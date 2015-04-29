@@ -10,7 +10,7 @@
 #include "parmetis.h"
 
 /*************************************************************************
-* This function remaps that graph so that it will minimize the 
+* This function remaps that graph so that it will minimize the
 * redistribution cost
 **************************************************************************/
 void ReMapGraph(CtrlType *ctrl, GraphType *graph, int rtype, WorkSpaceType *wspace)
@@ -51,7 +51,7 @@ void ReMapGraph(CtrlType *ctrl, GraphType *graph, int rtype, WorkSpaceType *wspa
 
 
 /*************************************************************************
-* This function computes the assignment using the the objective the 
+* This function computes the assignment using the the objective the
 * minimization of the total volume of data that needs to move
 **************************************************************************/
 void ComputeTotalVReMap1(CtrlType *ctrl, idxtype *lpwgts, idxtype *map, WorkSpaceType *wspace)
@@ -111,7 +111,7 @@ void ComputeTotalVReMap1(CtrlType *ctrl, idxtype *lpwgts, idxtype *map, WorkSpac
         nsaved += (-order[k].key - orgwgt[i]);
       }
     }
-    
+
     /* Map unmapped partitions */
     if (nmapped < npes) {
       for (i=j=0; j<npes && nmapped<npes; j++) {
@@ -139,11 +139,11 @@ void ComputeTotalVReMap1(CtrlType *ctrl, idxtype *lpwgts, idxtype *map, WorkSpac
     free(orgwgt);
   }
 
-  IMfree(&order, LTERM);
+  IMfree((void**)&order, LTERM);
 
-  IFSET(ctrl->dbglvl, DBG_INFO, rprintf(ctrl, "Savings from remapping: %d\n", nsaved)); 
+  IFSET(ctrl->dbglvl, DBG_INFO, rprintf(ctrl, "Savings from remapping: %d\n", nsaved));
 
   /* Tell everybody about the map array */
   MPI_Bcast(map, npes, IDX_DATATYPE, 0, ctrl->comm);
- 
+
 }

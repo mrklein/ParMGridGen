@@ -49,7 +49,7 @@ void SetUpGraph(GraphType *graph, int nvtxs, idxtype *xadj, realtype *vvol,
 **************************************************************************/
 void FreeGraph(GraphType *graph)
 {
-  IMfree(&graph->xadj, &graph->vwgt, &graph->vvol, &graph->vsurf,
+  IMfree((void**)&graph->xadj, &graph->vwgt, &graph->vvol, &graph->vsurf,
               &graph->adjncy, &graph->adjwgt, &graph->adjwgtsum, &graph->cmap,
               &graph->where, &graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
 

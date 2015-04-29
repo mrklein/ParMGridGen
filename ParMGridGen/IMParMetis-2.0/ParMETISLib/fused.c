@@ -26,7 +26,7 @@ void ParMETIS_FusedElementGraph(idxtype *vtxdist, idxtype *xadj, realtype *vvol,
 
   MPI_Comm_size(*comm, &npes);
   MPI_Comm_rank(*comm, &mype);
- 
+
   nvtxs = vtxdist[mype+1]-vtxdist[mype];
 
   /* IFSET(options[OPTION_DBGLVL], DBG_TRACK, printf("%d ParMETIS_FEG npes=%d\n",mype, npes)); */
@@ -52,8 +52,8 @@ void ParMETIS_FusedElementGraph(idxtype *vtxdist, idxtype *xadj, realtype *vvol,
   IFSET(ctrl.dbglvl, DBG_TIME, stoptimer(ctrl.TotalTmr));
 
   if (((*wgtflag)&2) == 0)
-    IMfree(&graph->vwgt, LTERM);
-  IMfree(&graph->lperm, &graph->peind, &graph->pexadj, &graph->peadjncy,
+    IMfree((void**)&graph->vwgt, LTERM);
+  IMfree((void**)&graph->lperm, &graph->peind, &graph->pexadj, &graph->peadjncy,
          &graph->peadjloc, &graph->recvptr, &graph->recvind, &graph->sendptr,
          &graph->imap, &graph->sendind, &graph, LTERM);
   FreeWSpace(&wspace);
@@ -94,7 +94,7 @@ void CreateFusedElementGraph(CtrlType *ctrl, GraphType *graph, WorkSpaceType *ws
   fvtxdist = idxmalloc(npes+1, "FusedElementGraph: fvtxdist");
   MPI_Allgather((void *)nparts, 1, MPI_INT, (void *)fvtxdist, 1, MPI_INT, *comm);
 
-  MAKECSR(i, npes, fvtxdist); 
+  MAKECSR(i, npes, fvtxdist);
   firstfvtx = fvtxdist[mype];
   nfvtxs = fvtxdist[mype+1]-fvtxdist[mype];
   gnfvtxs = fvtxdist[npes];
@@ -118,7 +118,7 @@ void CreateFusedElementGraph(CtrlType *ctrl, GraphType *graph, WorkSpaceType *ws
     fptr = map + gnfvtxs;
   }
   else {
-    map = idxsmalloc(gnfvtxs, -1, "FusedElementGraph: map"); 
+    map = idxsmalloc(gnfvtxs, -1, "FusedElementGraph: map");
     fptr = wspace->core;
   }
   idxset((*nparts+1), 0, fptr);
@@ -153,7 +153,7 @@ void CreateFusedElementGraph(CtrlType *ctrl, GraphType *graph, WorkSpaceType *ws
            k=adjncy[j];
            newpart=part[k];
            if (newpart != mypart && map[newpart] == -1) {  /* edge is not created yet */
-             map[newpart] = fxadj[ipart]+counter; 
+             map[newpart] = fxadj[ipart]+counter;
              fadjncy[fxadj[ipart]+counter] = newpart;
              fadjwgt[map[newpart]] = 1;         /* alternatively = adjwgt[k] */
              counter++;
@@ -169,26 +169,26 @@ void CreateFusedElementGraph(CtrlType *ctrl, GraphType *graph, WorkSpaceType *ws
 
   /* Now change the weights of the interface edges */
   ChangeWeights(nfvtxs, fvtxdist, fxadj, fadjncy, fadjwgt, *comm);
-  
+
   /* Repartition the graph using fused elements */
   foptions[0] = 1;
   foptions[3] = 0;
-  
+
 /* fpart = idxmalloc(nfvtxs, "TestParMetis: fpart"); */
   fpart = map;   /* it is OK since nfvtxs < gnfvtxs */
-  
+
   wgtflag = 1;
   ParMETIS_RepartLDiffusion(fvtxdist, fxadj, fadjncy, NULL, fadjwgt,
                  &wgtflag, numflag, foptions, &edgecut, fpart, comm);
-  
+
   /* Project the partitioning back to the original graph */
   for (ipart=0; ipart<nfvtxs; ipart++)  {
      ASSERTP(ctrl, fpart[ipart] >= 0 && fpart[ipart] < npes, (ctrl, "%d %d %d\n", ipart , fpart[ipart], npes) );
      for (i=fptr[ipart]; i<fptr[ipart+1]; i++)
-        graph->where[find[i]]=fpart[ipart];       
+        graph->where[find[i]]=fpart[ipart];
   }
 
   if (gnfvtxs + nvtxs + (*nparts+1) > wspace->maxcore)
-    IMfree(&map, LTERM);
-  IMfree(&fvtxdist, &fxadj, &fadjncy, &fadjwgt, &part, LTERM);
+    IMfree((void**)&map, LTERM);
+  IMfree((void**)&fvtxdist, &fxadj, &fadjncy, &fadjwgt, &part, LTERM);
 }

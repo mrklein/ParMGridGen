@@ -42,8 +42,6 @@ typedef double realtype;
 
 #ifdef DMALLOC
 #include <dmalloc.h>
-#else
-#include <malloc.h>
 #endif
 
 /*************************************************************************
@@ -241,7 +239,7 @@ double *fsmalloc(int, double, char *);
 realtype *realsmalloc(int, realtype, char *);
 void *IMmalloc(int, char *);
 #endif
-/* void IMfree(void **, ...); */
+void IMfree(void **, ...);
 
 
 /*-------------------------------------------------------------

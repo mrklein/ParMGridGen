@@ -20,14 +20,11 @@
 
 #ifdef DMALLOC
 #include <dmalloc.h>
-#else
-#include <malloc.h>
 #endif
 
 #include "rename.h"
 #include "defs.h"
 #include "struct.h"
-#include "defs.h"
 #include "macros.h"
 #include "proto.h"
 

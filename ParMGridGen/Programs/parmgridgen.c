@@ -2,7 +2,7 @@
  * Copyright 2001, Regents of the University of Minnesota
  *
  * parmgridgen.c
- * 
+ *
  * This file contains code for testing the adaptive partitioning routines
  *
  * George Irene
@@ -10,6 +10,8 @@
 
 #include "parmgridgen.h"
 
+void MGridGen(int, idxtype *, realtype *, realtype *, idxtype *, realtype *,
+              int, int, int *, int *, int *, idxtype *);
 
 /***********************************************************************************
 * This function is the testing routine for the adaptive multilevel partitioning code.
@@ -54,6 +56,6 @@ void TestParMGridGen(char *filename, int *options, int minsize, int maxsize, MPI
 
   WriteParallelPartition(filename, part, graph.vtxdist, nparts, mype, npes);
 
-  IMfree(&graph.vtxdist, &graph.xadj, &graph.vvol, &graph.vsurf, &graph.vwgt,
+  IMfree((void**)&graph.vtxdist, &graph.xadj, &graph.vvol, &graph.vsurf, &graph.vwgt,
          &graph.adjncy, &graph.adjwgt, &part, LTERM);
-} 
+}

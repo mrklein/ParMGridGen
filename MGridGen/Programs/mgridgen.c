@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     printf("--------------------------------------------------------------------\n");
     exit(0);
   }
-    
+
   strcpy(filename, argv[1]);
   options[OPTION_DIM] = atoi(argv[2]);
   options[OPTION_CTYPE] = atoi(argv[3]);
@@ -65,14 +65,14 @@ int main(int argc, char *argv[])
 
   cleartimer(tmr);
   starttimer(tmr);
-  MGridGen(graph.nvtxs, graph.xadj, graph.vvol, graph.vsurf, graph.adjncy, graph.adjwgt, 
+  MGridGen(graph.nvtxs, graph.xadj, graph.vvol, graph.vsurf, graph.adjncy, graph.adjwgt,
            minsize, maxsize, options, &nmoves, &nparts, part);
   stoptimer(tmr);
   printf("Total Time: %lf\n", gettimer(tmr));
 
   WritePartition(filename, part, graph.nvtxs, nparts);
 
-  IMfree(&graph.xadj, &graph.vvol, &graph.vsurf, &graph.adjncy, &graph.adjwgt, &part, LTERM);
+  IMfree((void**)&graph.xadj, &graph.vvol, &graph.vsurf, &graph.adjncy, &graph.adjwgt, &part, LTERM);
 
   return(0);
-}  
+}

@@ -25,7 +25,7 @@ void PrintVector2(CtrlType *ctrl, int n, int first, idxtype *vec, char *title)
         printf("%s\n", title);
       printf("\t%3d. ", ctrl->mype);
       for (i=0; i<n; i++)
-        printf("[%d %d.%hd] ", first+i, (vec[i]>=KEEP_BIT ? 1 : 0), (vec[i]>=KEEP_BIT ? vec[i]-KEEP_BIT : vec[i]));
+        printf("[%d %d.%d] ", first+i, (vec[i]>=KEEP_BIT ? 1 : 0), (vec[i]>=KEEP_BIT ? vec[i]-KEEP_BIT : vec[i]));
       printf("\n");
       fflush(stdout);
     }

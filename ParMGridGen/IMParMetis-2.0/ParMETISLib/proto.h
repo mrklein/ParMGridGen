@@ -8,6 +8,8 @@
  * George Irene
  */
 
+void IMfree(void **, ...);
+
 /* coarsen.c */
 void LocalMatch_HEM(CtrlType *, GraphType *, WorkSpaceType *);
 void Local_CreateCoarseGraph(CtrlType *, GraphType *, WorkSpaceType *, int);

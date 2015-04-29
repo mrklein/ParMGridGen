@@ -74,19 +74,19 @@ void RefineKWay(CtrlType *ctrl, GraphType *orggraph, GraphType *graph, int npass
   BreakComponents(ctrl, graph);
   Merge(ctrl, graph, npasses);
 
-  IMfree(&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
+  IMfree((void**)&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
   ComputeKWayPartitionParams(ctrl, graph);
   Random_KWayMultiObjRefine(ctrl, graph, npasses); 
 
   Cycle(ctrl, graph, npasses);
 
-  IMfree(&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
+  IMfree((void**)&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
   IFSET(ctrl->dbglvl, DBG_REFINE, ComputeKWayPartitionParams(ctrl, graph));
   IFSET(ctrl->dbglvl, DBG_REFINE,
         printf("Last level done nparts=%d minratio=%e\n",
                ctrl->nparts, graph->minratio));
 
-  IMfree(&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
+  IMfree((void**)&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
   IFSET(ctrl->dbglvl, DBG_TRACK, ComputeKWayPartitionParams(ctrl, graph));
   IFSET(ctrl->dbglvl, DBG_TRACK, ComputeGridStatistics(ctrl, graph));
 }
@@ -127,7 +127,7 @@ void RefineKWayOnce(CtrlType *ctrl, GraphType *graph, int npasses)
   for (i=0; i<nvtxs; i++)
      graph->where[pairs[i].val] = pairs[i].key;
 
-  IMfree(&pairs, LTERM);
+  IMfree((void**)&pairs, LTERM);
 
   /* Perform the refinement */
   ComputeKWayPartitionParams(ctrl, graph);
@@ -161,18 +161,18 @@ void RefineKWayOnce(CtrlType *ctrl, GraphType *graph, int npasses)
   BreakComponents(ctrl, graph);
   Merge(ctrl, graph, npasses);
 
-  IMfree(&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
+  IMfree((void**)&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
   ComputeKWayPartitionParams(ctrl, graph);
   Random_KWayMultiObjRefine(ctrl, graph, npasses); 
 
   Cycle(ctrl, graph, npasses);
 
-  IMfree(&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
+  IMfree((void**)&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
   IFSET(ctrl->dbglvl, DBG_REFINE, ComputeKWayPartitionParams(ctrl, graph));
   IFSET(ctrl->dbglvl, DBG_REFINE,
         printf("Last level done nparts=%d minratio=%e\n", ctrl->nparts, graph->minratio));
 
-  IMfree(&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
+  IMfree((void**)&graph->pwgts, &graph->pvol, &graph->psurf, LTERM);
   IFSET(ctrl->dbglvl, DBG_TRACK, ComputeKWayPartitionParams(ctrl, graph));
   IFSET(ctrl->dbglvl, DBG_TRACK, ComputeGridStatistics(ctrl, graph));
 }
@@ -240,7 +240,7 @@ void ProjectKWayPartition(GraphType *graph)
      where[i] = cwhere[cmap[i]];
 
   FreeGraph(cgraph);
-  IMfree(&(graph->coarser), LTERM);
+  IMfree((void**)&(graph->coarser), LTERM);
 }
 
 /*************************************************************************
@@ -305,7 +305,7 @@ void ComputeGridStatistics(CtrlType *ctrl, GraphType *graph)
        printf("[%2d %4d] ", i, counts[i]);
   printf("\n");
 
-  IMfree(&counts,LTERM);
+  IMfree((void**)&counts,LTERM);
 }
 
 
@@ -375,7 +375,7 @@ void BreakComponents(CtrlType *ctrl, GraphType *graph)
     ctrl->nparts = ncmps;
   }
 
-  IMfree(&touched, &cptr, &cind, &perm, &todo, LTERM);
+  IMfree((void**)&touched, &cptr, &cind, &perm, &todo, LTERM);
 }
 
 

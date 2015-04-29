@@ -38,8 +38,8 @@ EXTROBJS  = extract.o io.o
 default: $(BINDIR)/mgridgen #$(BINDIR)/transform $(BINDIR)/extract
 
 $(BINDIR)/mgridgen: $(MGRIDOBJS) $(MGRIDLIB) 
-	$(LD)  -o $@ $(MGRIDOBJS) $(LIBS)
-	chmod 744 $@
+	$(LD) -o $(shell pwd)/$(BINDIR)/$(shell basename $@) $(MGRIDOBJS) $(LIBS)
+	@chmod 744 $(shell pwd)/$(BINDIR)/$(shell basename $@)
 
 ## $(BINDIR)/transform : $(TRANSOBJS) $(MGRIDLIB)
 ## 	$(LD) -o $@ $(TRANSOBJS) $(LIBS)

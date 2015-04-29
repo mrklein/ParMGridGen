@@ -1,12 +1,12 @@
 #--------------------------------------------------------------------------
 # Which make to use 
-make = gmake
+make = make
 
 # Which compiler to use
 #  CC is the compiler for the serial code
 #  PARCC is the compiter for the parallel code
-CC = cc
-PARCC = cc
+CC = clang
+PARCC = /usr/local/opt/open-mpi/bin/mpicc
 
 # What optimization level to use
 OPTFLAGS = -O3
@@ -22,10 +22,10 @@ PARLD = cc
 LDOPTIONS = -O3
 
 # Where to put the executable 
-BINDIR = ../..
+BINDIR = ../../bin
 
 # Additional libraries
-DMALLOCDIR = /usr/local
+DMALLOCDIR = 
 IMLIBDIR = ../../MGridGen/IMlib
 
 # Include directories for the compiler
@@ -33,7 +33,7 @@ INCDIR =
 
 # In which directories to look for any additional libraries
 LIBDIR = -L../.. \
-         -L/usr/lib32/
+         -L/usr/local/lib
 
 # Set some flags
 DEBUGFLAGS =

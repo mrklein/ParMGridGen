@@ -47,12 +47,12 @@ void PreAllocateMGridMemory(MGridCtrlType *ctrl, MGridGraphType *graph, MGridWor
 void FreeMGridWSpace(MGridWorkSpaceType *wspace)
 {
 
-  IMfree(&wspace->core, 
-         &wspace->pv1, 
-         &wspace->pv2, 
-         &wspace->pv4, 
-         &wspace->pepairs1, 
-         &wspace->pepairs2, 
+  IMfree((void**)&wspace->core,
+         (void**)&wspace->pv1,
+         (void**)&wspace->pv2,
+         (void**)&wspace->pv4,
+         (void**)&wspace->pepairs1,
+         (void**)&wspace->pepairs2,
          LTERM);
 }
 
@@ -86,7 +86,7 @@ MGridGraphType *CreateMGridGraph(void)
 * This function creates a CoarseGraphType data structure and initializes
 * the various fields
 **************************************************************************/
-void InitMGridGraph(MGridGraphType *graph) 
+void InitMGridGraph(MGridGraphType *graph)
 {
   graph->gnvtxs = graph->nvtxs = graph->nedges = -1;
   graph->nnbrs = graph->nrecv = graph->nsend = graph->nlocal = -1;
@@ -116,10 +116,10 @@ void InitMGridGraph(MGridGraphType *graph)
 /*************************************************************************
 * This function deallocates any memory stored in a graph
 **************************************************************************/
-void FreeMGridGraph(MGridGraphType *graph) 
+void FreeMGridGraph(MGridGraphType *graph)
 {
 
-  IMfree(&graph->xadj, 
+  IMfree((void**)&graph->xadj,
          &graph->vwgt,
          &graph->vvol,
          &graph->vsurf,
@@ -131,22 +131,22 @@ void FreeMGridGraph(MGridGraphType *graph)
          &graph->vsize,
          &graph->adjncy,
          &graph->adjwgt,
-         &graph->vtxdist, 
-         &graph->match, 
-         &graph->cmap, 
-         &graph->lperm, 
+         &graph->vtxdist,
+         &graph->match,
+         &graph->cmap,
+         &graph->lperm,
          &graph->glblvtxid,
-         &graph->fusedinfo, 
-         &graph->where, 
-         &graph->rinfo, 
-         &graph->nrinfo, 
-         &graph->lpwgts, 
-         &graph->gpwgts, 
-         &graph->peind, 
-         &graph->sendptr, 
-         &graph->sendind, 
-         &graph->recvptr, 
-         &graph->recvind, 
+         &graph->fusedinfo,
+         &graph->where,
+         &graph->rinfo,
+         &graph->nrinfo,
+         &graph->lpwgts,
+         &graph->gpwgts,
+         &graph->peind,
+         &graph->sendptr,
+         &graph->sendind,
+         &graph->recvptr,
+         &graph->recvind,
          &graph->imap,
          &graph->rlens,
          &graph->slens,
@@ -156,17 +156,17 @@ void FreeMGridGraph(MGridGraphType *graph)
          &graph->peadjloc,
          LTERM);
 
-  IMfree(&graph, LTERM);
+  IMfree((void**)&graph, LTERM);
 }
 
 
 /*************************************************************************
 * This function deallocates any memory stored in a graph
 **************************************************************************/
-void FreeMGridGraphContent(MGridGraphType *graph) 
+void FreeMGridGraphContent(MGridGraphType *graph)
 {
 
-  IMfree(&graph->xadj, 
+  IMfree((void**)&graph->xadj,
          &graph->vwgt,
          &graph->vvol,
          &graph->vsurf,
@@ -178,22 +178,22 @@ void FreeMGridGraphContent(MGridGraphType *graph)
          &graph->vsize,
          &graph->adjncy,
          &graph->adjwgt,
-         &graph->vtxdist, 
-         &graph->match, 
-         &graph->cmap, 
-         &graph->lperm, 
+         &graph->vtxdist,
+         &graph->match,
+         &graph->cmap,
+         &graph->lperm,
          &graph->glblvtxid,
-         &graph->fusedinfo, 
-         &graph->where, 
-         &graph->rinfo, 
-         &graph->nrinfo, 
-         &graph->lpwgts, 
-         &graph->gpwgts, 
-         &graph->peind, 
-         &graph->sendptr, 
-         &graph->sendind, 
-         &graph->recvptr, 
-         &graph->recvind, 
+         &graph->fusedinfo,
+         &graph->where,
+         &graph->rinfo,
+         &graph->nrinfo,
+         &graph->lpwgts,
+         &graph->gpwgts,
+         &graph->peind,
+         &graph->sendptr,
+         &graph->sendind,
+         &graph->recvptr,
+         &graph->recvind,
          &graph->imap,
          &graph->rlens,
          &graph->slens,

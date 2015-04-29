@@ -12,8 +12,6 @@
 #include <stdio.h>
 #ifdef __STDC__
 #include <stdlib.h>
-#else
-/* #include <malloc.h> */
 #endif
 #include <string.h>
 #include <ctype.h>
@@ -25,8 +23,6 @@
 
 #ifdef DMALLOC
 #include <dmalloc.h>
-#else
-#include <malloc.h>
 #endif
 
 #include "defs.h"

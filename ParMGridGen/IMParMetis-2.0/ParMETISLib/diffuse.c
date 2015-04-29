@@ -54,7 +54,7 @@ void ParMETIS_RepartLDiffusion(idxtype *vtxdist, idxtype *xadj, idxtype *adjncy,
   idxcopy(graph->nvtxs, graph->where, part);
   *edgecut = graph->mincut;
 
-  IMfree(&graph->vsize, LTERM);
+  IMfree((void**)&graph->vsize, LTERM);
   FreeInitialGraphAndRemap(graph, *wgtflag);
   FreeWSpace(&wspace);
   FreeCtrl(&ctrl);

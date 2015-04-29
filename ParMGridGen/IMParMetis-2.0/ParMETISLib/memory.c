@@ -43,13 +43,13 @@ void PreAllocateMemory(CtrlType *ctrl, GraphType *graph, WorkSpaceType *wspace)
 void FreeWSpace(WorkSpaceType *wspace)
 {
 
-  IMfree(&wspace->core, 
-         &wspace->pv1, 
-         &wspace->pv2, 
+  IMfree((void**)&wspace->core,
+         &wspace->pv1,
+         &wspace->pv2,
          &wspace->pv3,
-         &wspace->pv4, 
-         &wspace->pepairs1, 
-         &wspace->pepairs2, 
+         &wspace->pv4,
+         &wspace->pepairs1,
+         &wspace->pepairs2,
          LTERM);
 }
 
@@ -83,7 +83,7 @@ GraphType *CreateGraph(void)
 * This function creates a CoarseGraphType data structure and initializes
 * the various fields
 **************************************************************************/
-void InitGraph(GraphType *graph) 
+void InitGraph(GraphType *graph)
 {
   graph->gnvtxs = graph->nvtxs = graph->nedges = graph->nsep = -1;
   graph->nnbrs = graph->nrecv = graph->nsend = graph->nlocal = -1;
@@ -115,30 +115,30 @@ void InitGraph(GraphType *graph)
 /*************************************************************************
 * This function deallocates any memory stored in a graph
 **************************************************************************/
-void FreeGraph(GraphType *graph) 
+void FreeGraph(GraphType *graph)
 {
 
-  IMfree(&graph->xadj, 
+  IMfree((void**)&graph->xadj,
          &graph->vwgt,
          &graph->vsize,
          &graph->adjncy,
          &graph->adjwgt,
-         &graph->vtxdist, 
-         &graph->match, 
-         &graph->cmap, 
-         &graph->lperm, 
-         &graph->label, 
-         &graph->where, 
-         &graph->rinfo, 
-         &graph->nrinfo, 
+         &graph->vtxdist,
+         &graph->match,
+         &graph->cmap,
+         &graph->lperm,
+         &graph->label,
+         &graph->where,
+         &graph->rinfo,
+         &graph->nrinfo,
          &graph->sepind,
-         &graph->lpwgts, 
-         &graph->gpwgts, 
-         &graph->peind, 
-         &graph->sendptr, 
-         &graph->sendind, 
-         &graph->recvptr, 
-         &graph->recvind, 
+         &graph->lpwgts,
+         &graph->gpwgts,
+         &graph->peind,
+         &graph->sendptr,
+         &graph->sendind,
+         &graph->recvptr,
+         &graph->recvind,
          &graph->imap,
          &graph->rlens,
          &graph->slens,
@@ -155,29 +155,29 @@ void FreeGraph(GraphType *graph)
 /*************************************************************************
 * This function deallocates any memory stored in a graph
 **************************************************************************/
-void FreeGraphContent(GraphType *graph) 
+void FreeGraphContent(GraphType *graph)
 {
 
-  IMfree(&graph->xadj, 
+  IMfree((void**)&graph->xadj,
          &graph->vwgt,
          &graph->vsize,
          &graph->adjncy,
          &graph->adjwgt,
-         &graph->vtxdist, 
-         &graph->match, 
-         &graph->cmap, 
-         &graph->lperm, 
-         &graph->where, 
+         &graph->vtxdist,
+         &graph->match,
+         &graph->cmap,
+         &graph->lperm,
+         &graph->where,
          &graph->label,
-         &graph->rinfo, 
-         &graph->nrinfo, 
-         &graph->lpwgts, 
-         &graph->gpwgts, 
-         &graph->peind, 
-         &graph->sendptr, 
-         &graph->sendind, 
-         &graph->recvptr, 
-         &graph->recvind, 
+         &graph->rinfo,
+         &graph->nrinfo,
+         &graph->lpwgts,
+         &graph->gpwgts,
+         &graph->peind,
+         &graph->sendptr,
+         &graph->sendind,
+         &graph->recvptr,
+         &graph->recvind,
          &graph->imap,
          &graph->rlens,
          &graph->slens,
@@ -193,7 +193,7 @@ void FreeGraphContent(GraphType *graph)
 /*************************************************************************
 * This function deallocates any memory stored in a graph
 **************************************************************************/
-void FreeInitialGraphAndRemap(GraphType *graph, int wgtflag) 
+void FreeInitialGraphAndRemap(GraphType *graph, int wgtflag)
 {
   int i, nedges;
   idxtype *adjncy, *imap;
@@ -208,21 +208,21 @@ void FreeInitialGraphAndRemap(GraphType *graph, int wgtflag)
   }
 
   /* Free Metis's things */
-  IMfree(&graph->match, 
-         &graph->cmap, 
-         &graph->lperm, 
-         &graph->where, 
-         &graph->label, 
-         &graph->rinfo, 
-         &graph->nrinfo, 
-         &graph->lpwgts, 
-         &graph->gpwgts, 
+  IMfree((void**)&graph->match,
+         &graph->cmap,
+         &graph->lperm,
+         &graph->where,
+         &graph->label,
+         &graph->rinfo,
+         &graph->nrinfo,
+         &graph->lpwgts,
+         &graph->gpwgts,
          &graph->sepind,
-         &graph->peind, 
-         &graph->sendptr, 
-         &graph->sendind, 
-         &graph->recvptr, 
-         &graph->recvind, 
+         &graph->peind,
+         &graph->sendptr,
+         &graph->sendind,
+         &graph->recvptr,
+         &graph->recvind,
          &graph->imap,
          &graph->rlens,
          &graph->slens,
@@ -232,10 +232,10 @@ void FreeInitialGraphAndRemap(GraphType *graph, int wgtflag)
          &graph->peadjloc,
          LTERM);
 
-  if ((wgtflag&2) == 0) 
-    IMfree(&graph->vwgt, &graph->vsize, LTERM);
-  if ((wgtflag&1) == 0) 
-    IMfree(&graph->adjwgt, LTERM);
+  if ((wgtflag&2) == 0)
+    IMfree((void**)&graph->vwgt, &graph->vsize, LTERM);
+  if ((wgtflag&1) == 0)
+    IMfree((void**)&graph->adjwgt, LTERM);
 
   free(graph);
 }

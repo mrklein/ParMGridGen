@@ -238,7 +238,7 @@ MGridGraphType *MoveMGridGraph(MGridCtrlType *ctrl, MGridGraphType *graph, MGrid
   ASSERTP(ctrl, jj == mgraph->nedges, (ctrl, "%d %d\n", jj, mgraph->nedges));
   ASSERTP(ctrl, ii == gpwgts[nparts], (ctrl, "%d %d %d %d %d\n", ii, gpwgts[nparts], jj, mgraph->nedges, nvtxs));
 
-  IMfree(&newlabel, &realcore, LTERM);
+  IMfree((void**)&newlabel, &realcore, LTERM);
   /* CheckMGraph(ctrl, mgraph); */
 
   return mgraph;

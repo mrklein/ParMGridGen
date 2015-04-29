@@ -63,7 +63,7 @@ void BucketSortKeysInc(int n, idxtype max, idxtype *keys, int *tperm, int *perm)
      perm[counts[keys[i]]++] = i;
   }
 
-  IMfree(&counts, LTERM);
+  IMfree((void**)&counts, LTERM);
 }
 
 
@@ -103,6 +103,7 @@ int BSearch(int n, idxtype *array, int key)
   }
 
   errexit("Key %d not found!\n", key);
+  return -1;
 }
 
 

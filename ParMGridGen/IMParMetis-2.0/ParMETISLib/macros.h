@@ -63,6 +63,8 @@
 #define idxsmalloc(n, val, msg) (idxset((n), (val), malloc(sizeof(idxtype)*(n))))
 #define realsmalloc(n, val, msg) (realset((n), (val), (realtype *)malloc(sizeof(realtype)*(n))))
 #define IMmalloc(a, b) (malloc(a))
+#else
+#define IMmalloc(a, b) (malloc(a))
 #endif
 
 #ifdef DMALLOC

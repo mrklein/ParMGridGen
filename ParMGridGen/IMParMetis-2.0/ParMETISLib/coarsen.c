@@ -305,5 +305,5 @@ void Local_CreateCoarseGraph(CtrlType *ctrl, GraphType *graph, WorkSpaceType *ws
   cgraph->adjwgt = realmalloc(cnedges, "CreateCoarserGraph: cadjwgt");
   idxcopy(cnedges, cadjncy, cgraph->adjncy);
   realcopy(cnedges, cadjwgt, cgraph->adjwgt);
-  IMfree(&cadjncy, &cadjwgt, &graph->where, LTERM); /* Note that graph->where works fine even if it is NULL */
+  IMfree((void**)&cadjncy, &cadjwgt, &graph->where, LTERM); /* Note that graph->where works fine even if it is NULL */
 }

@@ -20,8 +20,6 @@
 
 #ifdef DMALLOC
 #include <dmalloc.h>
-#else
-#include <malloc.h>
 #endif
 
 #include "IMlib.h"

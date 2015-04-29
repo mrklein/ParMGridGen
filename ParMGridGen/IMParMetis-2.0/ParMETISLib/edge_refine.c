@@ -486,7 +486,7 @@ void KWayRefineClean(CtrlType *ctrl, GraphType *graph, WorkSpaceType *wspace, in
       break;
   }
 
-  IMfree(&update, &nupds_pe, &htable, &changed, &pperm, &perm, LTERM);
+  IMfree((void**)&update, &nupds_pe, &htable, &changed, &pperm, &perm, LTERM);
 
   IFSET(ctrl->dbglvl, DBG_TIME, stoptimer(ctrl->KWayTmr));
 }
@@ -820,7 +820,7 @@ myprintf(ctrl, "*Node: %3d, Gain: %3d, From: %d, To: %d, Vwgt: %3d, Fwgt: %3d, T
   }
 
   MPI_Allreduce((void *)lpwgts, (void *)gpwgts, nparts, IDX_DATATYPE, MPI_SUM, ctrl->comm);
-  IMfree(&update, &nupds_pe, &htable, &changed, &perm, &pperm, &tocheck, LTERM);
+  IMfree((void**)&update, &nupds_pe, &htable, &changed, &perm, &pperm, &tocheck, LTERM);
 
   IFSET(ctrl->dbglvl, DBG_TIME, stoptimer(ctrl->KWayTmr));
 }

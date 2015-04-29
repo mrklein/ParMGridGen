@@ -55,7 +55,7 @@ void Match_RM(CtrlType *ctrl, GraphType *graph)
 
   CreateCoarseGraph(graph, cnvtxs, match, perm);
 
-  IMfree(&match, &perm, LTERM);
+  IMfree((void**)&match, &perm, LTERM);
 }
 
 
@@ -120,7 +120,7 @@ void Match_HEM(CtrlType *ctrl, GraphType *graph)
 
   CreateCoarseGraph(graph, cnvtxs, match, perm);
 
-  IMfree(&tperm, &perm, &match, LTERM);
+  IMfree((void**)&tperm, &perm, &match, LTERM);
 }
 
 
@@ -190,7 +190,7 @@ void Match_HEM_Slow(CtrlType *ctrl, GraphType *graph)
 
   CreateCoarseGraph(graph, cnvtxs, match, perm);
 
-  IMfree(&tperm, &perm, &match, LTERM);
+  IMfree((void**)&tperm, &perm, &match, LTERM);
 }
 
 
@@ -259,7 +259,7 @@ void Match_HEM_Slow_Restricted(CtrlType *ctrl, GraphType *graph)
 
   CreateCoarseGraph(graph, cnvtxs, match, perm);
 
-  IMfree(&perm, &match, LTERM);
+  IMfree((void**)&perm, &match, LTERM);
 }
 
 
@@ -339,5 +339,5 @@ void Match_HEM_True(CtrlType *ctrl, GraphType *graph)
 
   CreateCoarseGraph(graph, cnvtxs, match, perm);
 
-  IMfree(&cand, &perm, &match, LTERM);
+  IMfree((void**)&cand, &perm, &match, LTERM);
 }

@@ -80,7 +80,7 @@ GraphType *Coarsen_Restricted(CtrlType *ctrl, GraphType *graph)
     for (i=0; i<nvtxs; i++)
        cgraph->where[cmap[i]] = where[i];
 
-    IMfree(&(cgraph->finer->where), LTERM);
+    IMfree((void**)&(cgraph->finer->where), LTERM);
 
   } while (cgraph->nvtxs < cgraph->finer->nvtxs);
 
@@ -89,7 +89,7 @@ GraphType *Coarsen_Restricted(CtrlType *ctrl, GraphType *graph)
     printf("It appears that some domains are non-contigous [%d %d]\n",
            cgraph->nvtxs, ctrl->nparts);
 
-  IMfree(&(cgraph->where), LTERM);
+  IMfree((void**)&(cgraph->where), LTERM);
 
 
   /* Perform any additional coarsening */

@@ -25,7 +25,7 @@ void MGriderrexit(char *f_str,...)
 
   sprintf(out2, "Error! %s", out1);
 
-  fprintf(stdout, out2);
+  fprintf(stdout, "%s", out2);
   fflush(stdout);
 
   abort();
@@ -46,7 +46,7 @@ void MGridmyprintf(MGridCtrlType *ctrl, char *f_str,...)
 
   sprintf(out2, "[%2d] %s", ctrl->mype, out1);
 
-  fprintf(stdout, out2);
+  fprintf(stdout, "%s", out2);
   fflush(stdout);
 
 }

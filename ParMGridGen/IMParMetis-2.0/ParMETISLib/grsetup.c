@@ -140,5 +140,5 @@ void ComputeMoveStatistics(CtrlType *ctrl, GraphType *graph, int *nmoved, int *m
   *maxout = GlobalSEMax(ctrl, j);
   *maxin = GlobalSEMax(ctrl, gpvtxs[ctrl->mype]-(nvtxs-j));
 
-  IMfree(&lpvtxs, &gpvtxs, LTERM);
+  IMfree((void**)&lpvtxs, &gpvtxs, LTERM);
 }

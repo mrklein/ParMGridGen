@@ -17,7 +17,7 @@
 **************************************************************************/
 void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 {
-  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax; 
+  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax;
   int from, to, jbest;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts, *perm, *phtable, *ptarget;
   realtype old, new, best, id, ed, maxar;
@@ -35,7 +35,7 @@ void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
   pwgts  = graph->pwgts;
   pvol   = graph->pvol;
   psurf  = graph->psurf;
-  
+
   dim	   = ctrl->dim;
   nparts   = ctrl->nparts;
   degrees  = realmalloc(nparts, "degrees");
@@ -56,7 +56,7 @@ void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 
   IFSET(ctrl->dbglvl, DBG_REFINE,
      printf("Partitions: [%3d %3d]-[%3d %3d]. MaxRatio: [%4d, %e], Ratio: %e\n",
-             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)], 
+             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)],
              ctrl->minsize, ctrl->maxsize, pmax, maxar, graph->minratio));
 
   RandomPermute(nvtxs, perm, 1);
@@ -85,7 +85,7 @@ void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
                ptarget[ndegrees] = to;
                phtable[to] = ndegrees++;
              }
-             else 
+             else
                degrees[phtable[to]] += adjwgt[j];
            }
         }
@@ -106,7 +106,7 @@ void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
         if (jbest != -1) {
           to = ptarget[jbest];
           where[i] = to;
-          INC_DEC(pwgts[to], pwgts[from], vwgt[i]); 
+          INC_DEC(pwgts[to], pwgts[from], vwgt[i]);
           INC_DEC(pvol[to], pvol[from], vvol[i]);
           psurf[from] = psurf[from] + id - ed - vsurf[i];
           psurf[to]   = psurf[to] + id + ed - 2.0*degrees[jbest] + vsurf[i];
@@ -120,7 +120,7 @@ void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
           /* CheckParams(ctrl, graph); */
         }
 
-        for (j=0; j<ndegrees; j++) 
+        for (j=0; j<ndegrees; j++)
            phtable[ptarget[j]] = -1;
      }
 
@@ -146,7 +146,7 @@ void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
   graph->nmoves = nmoves;
   IFSET(ctrl->dbglvl, DBG_REFINE, printf("FinalMax: %d %e\n", pmax, maxar));
 
-  IMfree(&perm, &phtable, &degrees, &ptarget, LTERM);
+  IMfree((void**)&perm, &phtable, &degrees, &ptarget, LTERM);
 }
 
 
@@ -156,7 +156,7 @@ void Random_KWayARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 **************************************************************************/
 void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 {
-  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax; 
+  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax;
   int from, to, jbest;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts, *perm, *phtable, *ptarget;
   realtype old, new, best, id, ed, maxar;
@@ -174,7 +174,7 @@ void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
   pwgts  = graph->pwgts;
   pvol   = graph->pvol;
   psurf  = graph->psurf;
-  
+
   dim      = ctrl->dim;
   nparts   = ctrl->nparts;
   degrees  = realmalloc(nparts, "degrees");
@@ -217,14 +217,14 @@ void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
              id += adjwgt[j];
            else
              ed += adjwgt[j];
- 
+
            if (to != from && pwgts[to]+vwgt[i] <= ctrl->maxsize) {
              if (phtable[to] == -1) {
                degrees[ndegrees] = adjwgt[j];
                ptarget[ndegrees] = to;
                phtable[to] = ndegrees++;
              }
-             else 
+             else
                degrees[phtable[to]] += adjwgt[j];
            }
         }
@@ -232,7 +232,7 @@ void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
         /* Determine which of the ndegrees moves is the best */
         for (best=.1, jbest=-1, j=0; j<ndegrees; j++) {
            to = ptarget[j];
-           old = pwgts[from]*ARATIO(dim, psurf[from], pvol[from]) + 
+           old = pwgts[from]*ARATIO(dim, psurf[from], pvol[from]) +
                  pwgts[to]*ARATIO(dim, psurf[to], pvol[to]);
            new = (pwgts[from]-vwgt[i])*ARATIO(dim, psurf[from]+id-ed-vsurf[i], pvol[from]-vvol[i]) +
                 (pwgts[to]+vwgt[i])*ARATIO(dim, psurf[to]+ed+id-2.0*degrees[j]+vsurf[i], pvol[to]+vvol[i]);
@@ -245,7 +245,7 @@ void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
         if (jbest != -1) {
           to = ptarget[jbest];
           where[i] = to;
-          INC_DEC(pwgts[to], pwgts[from], vwgt[i]); 
+          INC_DEC(pwgts[to], pwgts[from], vwgt[i]);
           INC_DEC(pvol[to], pvol[from], vvol[i]);
           psurf[from] = psurf[from] + id - ed - vsurf[i];
           psurf[to]   = psurf[to] + id + ed - 2.0*degrees[jbest] + vsurf[i];
@@ -258,7 +258,7 @@ void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
           /* CheckParams(ctrl, graph); */
         }
 
-        for (j=0; j<ndegrees; j++) 
+        for (j=0; j<ndegrees; j++)
            phtable[ptarget[j]] = -1;
      }
 
@@ -277,13 +277,13 @@ void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
      if (new > maxar) {
        maxar = new;
        pmax = i;
-     } 
+     }
   }
 
   graph->nmoves = nmoves;
   IFSET(ctrl->dbglvl, DBG_REFINE, printf("FinalMax: %d %e\n", pmax, maxar));
 
-  IMfree(&perm, &phtable, &degrees, &ptarget, LTERM);
+  IMfree((void**)&perm, &phtable, &degrees, &ptarget, LTERM);
 }
 
 
@@ -293,7 +293,7 @@ void Random_KWayWeightARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
 **************************************************************************/
 void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 {
-  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax; 
+  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax;
   int from, to, jbest;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts, *perm, *phtable, *ptarget;
   realtype old, new, best, id, ed, maxar;
@@ -311,7 +311,7 @@ void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
   pwgts  = graph->pwgts;
   pvol   = graph->pvol;
   psurf  = graph->psurf;
-  
+
   dim      = ctrl->dim;
   nparts   = ctrl->nparts;
   degrees  = realmalloc(nparts, "degrees");
@@ -333,7 +333,7 @@ void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 
   IFSET(ctrl->dbglvl, DBG_REFINE,
      printf("Partitions: [%3d %3d]-[%3d %3d]. MaxRatio: [%4d, %e], Ratio: %e\n",
-             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)], 
+             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)],
              ctrl->minsize, ctrl->maxsize, pmax, maxar, graph->minratio));
 
   RandomPermute(nvtxs, perm, 1);
@@ -362,14 +362,14 @@ void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
                ptarget[ndegrees] = to;
                phtable[to] = ndegrees++;
              }
-             else 
+             else
                degrees[phtable[to]] += adjwgt[j];
            }
         }
 
         /* Determine which of the ndegrees moves is the best */
         for (jbest=-1, j=0; j<ndegrees; j++) {
-           if (jbest == -1 || degrees[j] > degrees[jbest]) 
+           if (jbest == -1 || degrees[j] > degrees[jbest])
              jbest = j;
         }
         if (jbest != -1 && degrees[jbest] < id)
@@ -385,7 +385,7 @@ void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 
           if (best >= 0.0 || degrees[jbest]-id + best > 0.0) {
             where[i] = to;
-            INC_DEC(pwgts[to], pwgts[from], vwgt[i]); 
+            INC_DEC(pwgts[to], pwgts[from], vwgt[i]);
             INC_DEC(pvol[to], pvol[from], vvol[i]);
             psurf[from] = psurf[from] + id - ed - vsurf[i];
             psurf[to]   = psurf[to] + id + ed - 2.0*degrees[jbest] + vsurf[i];
@@ -399,7 +399,7 @@ void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
           /* CheckParams(ctrl, graph); */
         }
 
-        for (j=0; j<ndegrees; j++) 
+        for (j=0; j<ndegrees; j++)
            phtable[ptarget[j]] = -1;
      }
 
@@ -413,7 +413,7 @@ void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
   }
 
   graph->nmoves = nmoves;
-  IMfree(&perm, &phtable, &degrees, &ptarget, LTERM);
+  IMfree((void**)&perm, &phtable, &degrees, &ptarget, LTERM);
 }
 
 /*************************************************************************
@@ -425,7 +425,7 @@ void Random_KWaySCutRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
                                           int npasses)
 {
-  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax; 
+  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax;
   int from, to, jbest;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts, *perm, *phtable, *ptarget;
   realtype old, new, best, id, ed, maxar;
@@ -444,7 +444,7 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
   pwgts  = graph->pwgts;
   pvol   = graph->pvol;
   psurf  = graph->psurf;
-  
+
   dim      = ctrl->dim;
   nparts   = ctrl->nparts;
   degrees  = realmalloc(nparts, "degrees");
@@ -465,7 +465,7 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
 
   IFSET(ctrl->dbglvl, DBG_REFINE,
      printf("Partitions: [%3d %3d]-[%3d %3d]. MaxRatio: [%4d, %e], Ratio: %e\n",
-             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)], 
+             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)],
              ctrl->minsize, ctrl->maxsize, pmax, maxar, graph->minratio));
 
   RandomPermute(nvtxs, perm, 1);
@@ -494,7 +494,7 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
                ptarget[ndegrees] = to;
                phtable[to] = ndegrees++;
              }
-             else 
+             else
                degrees[phtable[to]] += adjwgt[j];
            }
         }
@@ -535,11 +535,11 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
           to = ptarget[jbest];
 
           where[i] = to;
-          INC_DEC(pwgts[to], pwgts[from], vwgt[i]); 
+          INC_DEC(pwgts[to], pwgts[from], vwgt[i]);
           INC_DEC(pvol[to], pvol[from], vvol[i]);
           psurf[from] = psurf[from] + id - ed - vsurf[i];
           psurf[to]   = psurf[to] + id + ed - 2.0*degrees[jbest] + vsurf[i];
-     
+
           /* If we moved from/to the pmax subdomain find the new one ! */
           if (from == pmax || to == pmax) {
             pmax = 0;
@@ -551,7 +551,7 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
                  pmax = i;
                }
             }
-     
+
             graph->minratio = maxar;
           }
 
@@ -564,12 +564,12 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
           /* CheckParams(ctrl, graph); */
         }
 
-        for (j=0; j<ndegrees; j++) 
+        for (j=0; j<ndegrees; j++)
            phtable[ptarget[j]] = -1;
      }
 
      IFSET(ctrl->dbglvl, DBG_REFINE, printf("\t[%6d %6d], Nmoves: %5d, MinRatio: %e\n",
-                     pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)], 
+                     pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)],
                      nmoves, graph->minratio));
 
      if (nmoves == 0)
@@ -579,7 +579,7 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
   graph->nmoves = nmoves;
   IFSET(ctrl->dbglvl, DBG_REFINE, printf("FinalMax: %d %e\n", pmax, maxar));
 
-  IMfree(&perm, &phtable, &degrees, &ptarget, LTERM);
+  IMfree((void**)&perm, &phtable, &degrees, &ptarget, LTERM);
 }
 
 
@@ -589,7 +589,7 @@ void Random_KWayMinMaxAverageARatioRefine(CtrlType *ctrl, GraphType *graph,
 **************************************************************************/
 void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 {
-  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax; 
+  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax;
   int from, to, jbest;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts, *perm, *phtable, *ptarget;
   realtype new, best, id, ed, maxar;
@@ -608,7 +608,7 @@ void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
   pwgts  = graph->pwgts;
   pvol   = graph->pvol;
   psurf  = graph->psurf;
-  
+
   dim      = ctrl->dim;
   nparts   = ctrl->nparts;
   degrees  = realmalloc(nparts, "degrees");
@@ -629,7 +629,7 @@ void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
 
   IFSET(ctrl->dbglvl, DBG_REFINE,
      printf("Partitions: [%3d %3d]-[%3d %3d]. MaxRatio: [%4d, %e], Ratio: %e\n",
-             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)], 
+             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)],
              ctrl->minsize, ctrl->maxsize, pmax, maxar, graph->minratio));
 
   RandomPermute(nvtxs, perm, 1);
@@ -658,7 +658,7 @@ void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
                ptarget[ndegrees] = to;
                phtable[to] = ndegrees++;
              }
-             else 
+             else
               degrees[phtable[to]] += adjwgt[j];
            }
         }
@@ -680,7 +680,7 @@ void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
         if (jbest != -1) {
           to = ptarget[jbest];
           where[i] = to;
-          INC_DEC(pwgts[to], pwgts[from], vwgt[i]); 
+          INC_DEC(pwgts[to], pwgts[from], vwgt[i]);
           INC_DEC(pvol[to], pvol[from], vvol[i]);
           psurf[from] = psurf[from] + id - ed - vsurf[i];
           psurf[to]   = psurf[to] + id + ed - 2.0*degrees[jbest] + vsurf[i];
@@ -708,7 +708,7 @@ void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
           /* CheckParams(ctrl, graph); */
         }
 
-        for (j=0; j<ndegrees; j++) 
+        for (j=0; j<ndegrees; j++)
            phtable[ptarget[j]] = -1;
      }
 
@@ -724,7 +724,7 @@ void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
   graph->nmoves = nmoves;
   IFSET(ctrl->dbglvl, DBG_REFINE, printf("FinalMax: %d %e\n", pmax, maxar));
 
-  IMfree(&perm, &phtable, &degrees, &ptarget, LTERM);
+  IMfree((void**)&perm, &phtable, &degrees, &ptarget, LTERM);
 }
 
 
@@ -735,7 +735,7 @@ void Random_KWayMinMaxARatioRefine(CtrlType *ctrl, GraphType *graph, int npasses
 **************************************************************************/
 void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 {
-  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax; 
+  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax;
   int from, to, jbest, jbest1, jbest2;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts, *perm, *phtable, *ptarget;
   realtype old, new, best, best1, best2, id, ed, maxar;
@@ -754,7 +754,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
   pwgts  = graph->pwgts;
   pvol   = graph->pvol;
   psurf  = graph->psurf;
-  
+
   dim      = ctrl->dim;
   nparts   = ctrl->nparts;
   degrees  = realmalloc(nparts, "degrees");
@@ -775,7 +775,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 
   IFSET(ctrl->dbglvl, DBG_REFINE,
      printf("Partitions: [%3d %3d]-[%3d %3d]. MaxRatio: [%4d, %e], Ratio: %e\n",
-             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)], 
+             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)],
              ctrl->minsize, ctrl->maxsize, pmax, maxar, graph->minratio));
 
   RandomPermute(nvtxs, perm, 1);
@@ -806,7 +806,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
                ptarget[ndegrees] = to;
                phtable[to] = ndegrees++;
              }
-             else 
+             else
                degrees[phtable[to]] += adjwgt[j];
            }
         }
@@ -863,7 +863,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
           best = best1;
           IFSET(ctrl->dbglvl, DBG_MOVEINFO,
                 printf("\t1st OBJECTIVE. Gain: %8.6f\n", best1));
-        }  
+        }
         else if (jbest2 != -1) {
           jbest = jbest2;
           best = best2;
@@ -880,7 +880,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
           to = ptarget[jbest];
 
           where[i] = to;
-          INC_DEC(pwgts[to], pwgts[from], vwgt[i]); 
+          INC_DEC(pwgts[to], pwgts[from], vwgt[i]);
           INC_DEC(pvol[to], pvol[from], vvol[i]);
           psurf[from] = psurf[from] + id - ed - vsurf[i];
           psurf[to]   = psurf[to] + id + ed - 2.0*degrees[jbest] + vsurf[i];
@@ -906,7 +906,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
           /* CheckParams(ctrl, graph); */
         }
 
-        for (j=0; j<ndegrees; j++) 
+        for (j=0; j<ndegrees; j++)
           phtable[ptarget[j]] = -1;
      }
 
@@ -922,7 +922,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
   graph->nmoves = nmoves;
   IFSET(ctrl->dbglvl, DBG_REFINE, printf("FinalMax: %d %e\n", pmax, maxar));
 
-  IMfree(&perm, &phtable, &degrees, &ptarget, LTERM);
+  IMfree((void**)&perm, &phtable, &degrees, &ptarget, LTERM);
 }
 
 
@@ -933,7 +933,7 @@ void Random_KWayMultiObjRefine(CtrlType *ctrl, GraphType *graph, int npasses)
 **************************************************************************/
 void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
 {
-  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax; 
+  int i, ii, j, dim, nparts, pass, nvtxs, nmoves, ndegrees, pmax;
   int from, to, jbest, jbest1, jbest2;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts, *perm, *phtable, *ptarget;
   realtype old, new, best, best1, best2, id, ed, maxar;
@@ -952,7 +952,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
   pwgts  = graph->pwgts;
   pvol   = graph->pvol;
   psurf  = graph->psurf;
-  
+
   dim      = ctrl->dim;
   nparts   = ctrl->nparts;
   degrees  = realmalloc(nparts, "degrees");
@@ -973,7 +973,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
 
   IFSET(ctrl->dbglvl, DBG_REFINE,
      printf("Partitions: [%3d %3d]-[%3d %3d]. MaxRatio: [%4d, %e], Ratio: %e\n",
-             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)], 
+             pwgts[iamin(nparts, pwgts)], pwgts[iamax(nparts, pwgts)],
              ctrl->minsize, ctrl->maxsize, pmax, maxar, graph->minratio));
 
   RandomPermute(nvtxs, perm, 1);
@@ -1004,7 +1004,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
                ptarget[ndegrees] = to;
                phtable[to] = ndegrees++;
              }
-             else 
+             else
                degrees[phtable[to]] += adjwgt[j];
            }
         }
@@ -1050,7 +1050,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
           best = best1;
           IFSET(ctrl->dbglvl, DBG_MOVEINFO,
                 printf("\t1st OBJECTIVE. Gain: %8.6f\n", best1));
-        }  
+        }
         else if (jbest2 != -1) {
           jbest = jbest2;
           best = best2;
@@ -1067,7 +1067,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
           to = ptarget[jbest];
 
           where[i] = to;
-          INC_DEC(pwgts[to], pwgts[from], vwgt[i]); 
+          INC_DEC(pwgts[to], pwgts[from], vwgt[i]);
           INC_DEC(pvol[to], pvol[from], vvol[i]);
           psurf[from] = psurf[from] + id - ed - vsurf[i];
           psurf[to]   = psurf[to] + id + ed - 2.0*degrees[jbest] + vsurf[i];
@@ -1093,7 +1093,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
           /* CheckParams(ctrl, graph); */
         }
 
-        for (j=0; j<ndegrees; j++) 
+        for (j=0; j<ndegrees; j++)
           phtable[ptarget[j]] = -1;
      }
 
@@ -1109,7 +1109,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
   graph->nmoves = nmoves;
   IFSET(ctrl->dbglvl, DBG_REFINE, printf("FinalMax: %d %e\n", pmax, maxar));
 
-  IMfree(&perm, &phtable, &degrees, &ptarget, LTERM);
+  IMfree((void**)&perm, &phtable, &degrees, &ptarget, LTERM);
 }
 
 
@@ -1118,7 +1118,7 @@ void Random_KWayMultiObjRefine2(CtrlType *ctrl, GraphType *graph, int npasses)
 **************************************************************************/
 void CheckParams(CtrlType *ctrl, GraphType *graph)
 {
-  int i, j, me, nvtxs, nparts; 
+  int i, j, me, nvtxs, nparts;
   idxtype *xadj, *vwgt, *adjncy, *where, *pwgts;
   realtype *vvol, *vsurf, *adjwgt, *pvol, *psurf;
 
@@ -1156,10 +1156,10 @@ void CheckParams(CtrlType *ctrl, GraphType *graph)
      if (fabs(pvol[i] - graph->pvol[i]) > .01)
        printf("pvol: %d %e %e\n", i, pvol[i], graph->pvol[i]);
 
-     if (fabs(psurf[i] - graph->psurf[i]) > .01) 
+     if (fabs(psurf[i] - graph->psurf[i]) > .01)
        printf("psurf: %d %e %e\n", i, psurf[i], graph->psurf[i]);
 
   }
 
-  IMfree(&pwgts, &pvol, &psurf, LTERM);
+  IMfree((void**)&pwgts, &pvol, &psurf, LTERM);
 }

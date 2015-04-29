@@ -25,7 +25,7 @@ void errexit(char *f_str,...)
 
   sprintf(out2, "Error! %s", out1);
 
-  fprintf(stdout, out2);
+  fprintf(stdout, "%s", out2);
   fflush(stdout);
 
   abort();
@@ -46,7 +46,7 @@ void myprintf(CtrlType *ctrl, char *f_str,...)
 
   sprintf(out2, "[%2d] %s", ctrl->mype, out1);
 
-  fprintf(stdout, out2);
+  fprintf(stdout, "%s", out2);
   fflush(stdout);
 
 }
@@ -82,7 +82,7 @@ int *imalloc(int n, char *msg)
   if (n == 0)
     return NULL;
 
-  return (int *)IMmalloc(sizeof(int)*n, msg);
+  return (int *)malloc(sizeof(int)*n);
 }
 
 
@@ -94,7 +94,7 @@ idxtype *idxmalloc(int n, char *msg)
   if (n == 0)
     return NULL;
 
-  return (idxtype *)IMmalloc(sizeof(idxtype)*n, msg);
+  return (idxtype *)malloc(sizeof(idxtype)*n);
 }
 
 /*************************************************************************
@@ -105,7 +105,7 @@ float *fmalloc(int n, char *msg)
   if (n == 0)
     return NULL;
 
-  return (float *)IMmalloc(sizeof(float)*n, msg);
+  return (float *)malloc(sizeof(float)*n);
 }
 
 
@@ -117,7 +117,7 @@ realtype *realmalloc(int n, char *msg)
   if (n == 0)
     return NULL;
 
-  return (realtype *)IMmalloc(sizeof(realtype)*n, msg);
+  return (realtype *)malloc(sizeof(realtype)*n);
 }
 
 
@@ -129,7 +129,7 @@ int *ismalloc(int n, int ival, char *msg)
   if (n == 0)
     return NULL;
 
-  return iset(n, ival, (int *)IMmalloc(sizeof(int)*n, msg));
+  return iset(n, ival, (int *)malloc(sizeof(int)*n));
 }
 
 
@@ -142,7 +142,7 @@ idxtype *idxsmalloc(int n, idxtype ival, char *msg)
   if (n == 0)
     return NULL;
 
-  return idxset(n, ival, (idxtype *)IMmalloc(sizeof(idxtype)*n, msg));
+  return idxset(n, ival, (idxtype *)malloc(sizeof(idxtype)*n));
 }
 
 /*************************************************************************
@@ -153,7 +153,7 @@ realtype *realsmalloc(int n, realtype rval, char *msg)
   if (n == 0)
     return NULL;
 
-  return realset(n, rval, (realtype *)IMmalloc(sizeof(realtype)*n, msg));
+  return realset(n, rval, (realtype *)malloc(sizeof(realtype)*n));
 }
 
 #endif
@@ -385,6 +385,7 @@ int BSearch(int n, idxtype *array, int key)
   }
 
   errexit("Key %d not found!\n", key);
+  return 0;
 }
 
 
